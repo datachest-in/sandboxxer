@@ -1,8 +1,10 @@
 from .executor import CodeExecutor
 
 class Sandbox:
+
     def __init__(self):
         self.executor = CodeExecutor()
+        self.EXIT_MSG = "Exiting sandbox."
 
     def run(self):
         """Run the interactive sandbox."""
@@ -11,13 +13,11 @@ class Sandbox:
             try:
                 code = input(">>> ")
                 if code.lower() == 'exit' or code.lower() == 'quit' or code.lower() == 'q':
+                    print(self.EXIT_MSG)
                     break
                 self.executor.execute(code)
-            except EOFError:  # Handle Ctrl+Z (EOF)
-                print("\nExiting sandbox.")
-                break
-            except KeyboardInterrupt:  # Handle Ctrl+C
-                print("\nExiting sandbox.")
+            except (EOFError, KeyboardInterrupt):  # Handle Ctrl+Z (EOF), Ctrl+C (KeyboardInterrupt)
+                print(self.EXIT_MSG)
                 break
             except Exception as e:
                 print(e)
